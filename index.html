@@ -2,777 +2,161 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>정치 아레나 - Politics Arena</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="정치 아레나 - 좌우, 논리로 맞붙는 정치 토론 리그 플랫폼" />
+  <title>째무를 빗질하기</title>
   <style>
     :root {
-      /* 기본(라이트) 팔레트 */
-      --blue: #0000FF;  /* 순수 파랑 */
-      --red:  #FF0000;  /* 순수 빨강 */
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --bg: #ffffff;
-      --bg-soft: #f9fafb;
-      --border-soft: #e5e7eb;
-      --accent: #f97316;
-      --card-bg: #ffffff;
-      --shadow-strong-blue: rgba(0, 0, 255, 0.3);
-      --shadow-strong-red:  rgba(255, 0, 0, 0.3);
+      --page-bg: #dfdfe2;
+      --card-bg: #f3f3f3;
+      --text: #1f1f1f;
+      --muted: #6b6b6b;
+      --link: #bf4d59;
     }
 
-    /* 🔹 다크 모드 팔레트: body에 .dark 클래스가 붙으면 이 값으로 덮어씀 */
-    body.dark {
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --bg: #030712;
-      --bg-soft: #050816;
-      --border-soft: #1f2933;
-      --card-bg: #050816;
-      --accent: #fb923c;
-      --shadow-strong-blue: rgba(37, 99, 235, 0.55);
-      --shadow-strong-red:  rgba(239, 68, 68, 0.55);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
-        "Pretendard", "Apple SD Gothic Neo", sans-serif;
-      background: var(--bg);
-      color: var(--text-main);
-      line-height: 1.6;
-      transition: background 0.25s ease, color 0.25s ease;
+      margin: 0;
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    .floating-actions {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .floating-actions button {
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(35, 35, 35, 0.55);
+      color: #fff;
+      font-size: 14px;
+      padding: 6px 10px;
+      text-align: left;
+      cursor: pointer;
     }
 
     .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1120px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    /* 헤더 */
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: color-mix(in srgb, var(--bg) 92%, transparent);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-soft);
-      transition: background 0.25s ease, border-color 0.25s ease;
-    }
-
-    .header-inner {
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-    }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    .logo-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      background: linear-gradient(
-        to right,
-        var(--blue) 0%,
-        var(--blue) 50%,
-        var(--red)  50%,
-        var(--red)  100%
-      );
-      position: relative;
-      overflow: hidden;
-      animation: pulse 4s ease-in-out infinite;
-      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.45);
-    }
-
-    .logo-icon::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 0;
-      width: 2px;
-      height: 100%;
-      transform: translateX(-50%);
-      background: linear-gradient(to bottom, #ffffff, #f97316, #ffffff);
-      opacity: 0.9;
-    }
-
-    .logo-main {
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-    }
-
-    .logo-sub {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .nav-links a:hover {
-      color: var(--text-main);
-    }
-
-    .btn-primary {
-      padding: 0.45rem 1rem;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.82rem;
-      white-space: nowrap;
-      color: #ffffff;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-      background: linear-gradient(
-        90deg,
-        var(--blue) 0%,
-        var(--blue) 50%,
-        var(--red)  50%,
-        var(--red)  100%
-      );
-      box-shadow: 0 8px 20px var(--shadow-strong-blue),
-                  0 8px 20px var(--shadow-strong-red);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      opacity: 0.96;
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
-      opacity: 0.9;
-    }
-
-    /* 다크모드 토글 버튼 (텍스트형) */
-    .btn-ghost {
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      padding: 0.3rem 0.8rem;
-      font-size: 0.78rem;
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-    }
-
-    .btn-ghost:hover {
-      background: color-mix(in srgb, var(--bg-soft) 80%, transparent);
-      color: var(--text-main);
-      border-color: color-mix(in srgb, var(--border-soft) 80%, var(--blue) 20%);
-    }
-
-    /* 히어로 */
-
-    .hero {
-      padding: 2.5rem 0 2.5rem;
-      border-bottom: 1px solid var(--border-soft);
-      transition: border-color 0.25s ease;
-    }
-
-    .hero-inner {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 2rem;
-      align-items: center;
-      animation: fadeUp 0.7s ease-out both;
-    }
-
-    .hero-kicker {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 0.6rem;
-    }
-
-    .hero-title {
-      font-size: clamp(2rem, 3.4vw, 2.7rem);
-      font-weight: 800;
-      margin-bottom: 0.7rem;
-    }
-
-    .hero-title span.blue {
-      color: var(--blue);
-    }
-
-    .hero-title span.red {
-      color: var(--red);
-    }
-
-    .hero-sub {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 1.1rem;
-      max-width: 32rem;
-    }
-
-    .hero-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-bottom: 1.3rem;
-    }
-
-    .tag {
-      font-size: 0.78rem;
-      padding: 0.23rem 0.7rem;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: var(--bg);
-      color: #4b5563;
-      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    }
-
-    body.dark .tag {
-      color: var(--text-muted);
-    }
-
-    .hero-cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-      font-size: 0.85rem;
-    }
-
-    .hero-note {
-      color: var(--text-muted);
-    }
-
-    .hero-note span {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    /* 배너 이미지 영역 */
-
-    .hero-image-wrap {
-      border-radius: 1.1rem;
-      overflow: hidden;
-      border: 1px solid var(--border-soft);
-      background: #000;
-      aspect-ratio: 16 / 9;
-      animation: fadeUp 0.7s ease-out 0.1s both, pulse 4s ease-in-out infinite;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
-      box-shadow: 0 18px 35px rgba(15, 23, 42, 0.45);
-    }
-
-    .hero-image-wrap img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      object-position: center;
-    }
-
-    /* 섹션 공통 */
-
-    .section {
-      padding: 2.5rem 0 2.8rem;
-      transition: background 0.25s ease, border-color 0.25s ease;
-    }
-
-    .section.alt {
-      background: var(--bg-soft);
-      border-top: 1px solid var(--border-soft);
-      border-bottom: 1px solid var(--border-soft);
-    }
-
-    .section-header {
-      margin-bottom: 1.4rem;
-    }
-
-    .section-kicker {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-
-    .section-title {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-
-    .section-sub {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      max-width: 32rem;
-    }
-
-    /* 오늘의 매치 */
-
-    .arena-card {
-      background: var(--card-bg);
-      border-radius: 1rem;
-      border: 1px solid var(--border-soft);
-      padding: 1.2rem 1.1rem;
-      animation: fadeUp 0.7s ease-out 0.15s both;
-      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
-    }
-
-    .arena-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 0.6rem;
-    }
-
-    .arena-divider {
-      position: relative;
-      height: 1px;
-      background: linear-gradient(
-        to right,
-        rgba(0, 0, 255, 0.5),
-        rgba(209, 213, 219, 0.9),
-        rgba(255, 0, 0, 0.5)
-      );
-      margin-bottom: 0.7rem;
-    }
-
-    .arena-divider::before {
-      content: "VS";
-      position: absolute;
-      left: 50%;
-      top: -0.7rem;
-      transform: translateX(-50%);
-      font-size: 0.7rem;
-      padding: 0.12rem 0.55rem;
-      border-radius: 999px;
-      background: var(--bg);
-      border: 1px solid var(--border-soft);
-      letter-spacing: 0.22em;
-      color: var(--text-muted);
-      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    }
-
-    .arena-sides {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-      font-size: 0.82rem;
-    }
-
-    .arena-side-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 0.25rem;
-    }
-
-    .arena-side-label.blue {
-      color: var(--blue);
-    }
-    .arena-side-label.red {
-      color: var(--red);
-      text-align: right;
-    }
-
-    .arena-topic {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .arena-topic.right {
-      text-align: right;
-    }
-
-    .arena-meta {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .arena-meta span {
-      font-weight: 500;
-      color: var(--accent);
-    }
-
-    .arena-footer {
-      margin-top: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .chip {
-      padding: 0.18rem 0.6rem;
-      border-radius: 999px;
-      background: var(--bg-soft);
-      transition: background 0.25s ease;
-    }
-
-    /* WHY 섹션 카드 */
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.1rem;
+      min-height: 100vh;
+      border-left: 1px solid #c9c9ce;
+      border-right: 1px solid #c9c9ce;
+      background: #ececee;
+      padding: 18px 0 48px;
     }
 
     .card {
+      width: min(92%, 560px);
+      margin: 0 auto;
       background: var(--card-bg);
-      border-radius: 0.9rem;
-      border: 1px solid var(--border-soft);
-      padding: 1rem;
-      animation: fadeUp 0.7s ease-out 0.2s both;
-      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+      padding: 14px 14px 28px;
     }
 
-    .feature-grid .card:nth-child(2) {
-      animation-delay: 0.28s;
+    .score {
+      margin: 0;
+      color: #5c5c5c;
+      font-size: 68px;
+      font-weight: 400;
+      line-height: 1;
     }
 
-    .feature-grid .card:nth-child(3) {
-      animation-delay: 0.36s;
-    }
-
-    .card-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 0.3rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-    }
-
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 0.35rem;
-    }
-
-    .card-text {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    /* 푸터 */
-
-    footer {
-      margin-top: auto;
-      border-top: 1px solid var(--border-soft);
-      background: var(--bg);
-      padding: 1.2rem 0 1.5rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    }
-
-    .footer-inner {
+    .hero-wrap {
+      margin-top: 8px;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.6rem;
+      justify-content: center;
+      min-height: 500px;
     }
 
-    /* 애니메이션 키프레임 */
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .hero-wrap img {
+      width: 360px;
+      max-width: 100%;
+      object-fit: contain;
+      filter: saturate(1.05);
     }
 
-    @keyframes pulse {
-      0%, 100% {
-        box-shadow: 0 0 0 0 rgba(0, 0, 255, 0.35),
-                    0 0 0 0 rgba(255, 0, 0, 0.35);
-      }
-      50% {
-        box-shadow: 0 0 0 6px rgba(0, 0, 255, 0),
-                    0 0 0 6px rgba(255, 0, 0, 0);
-      }
+    .desc {
+      width: min(92%, 560px);
+      margin: 18px auto 0;
+      font-size: 31px;
+      line-height: 1.8;
+      letter-spacing: -0.02em;
+    }
+
+    .desc p {
+      margin: 0 0 14px;
+    }
+
+    .meta {
+      color: var(--muted);
+    }
+
+    .more {
+      color: var(--link);
+      margin-top: 8px;
+      display: inline-block;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    h2 {
+      margin-top: 34px;
+      margin-bottom: 10px;
+      font-size: 48px;
+      line-height: 1.1;
+    }
+
+    .login {
+      color: var(--link);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     @media (max-width: 900px) {
-      .hero-inner {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .hero-image-wrap {
-        order: -1;
-      }
-      .feature-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .desc { font-size: 24px; }
+      h2 { font-size: 40px; }
     }
 
-    @media (max-width: 640px) {
-      .header-inner {
-        gap: 0.6rem;
-      }
-      .nav-links {
-        display: none;
-      }
-      .hero {
-        padding-top: 2rem;
-      }
-      .feature-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
+    @media (max-width: 600px) {
+      .score { font-size: 52px; }
+      .desc { font-size: 20px; }
+      h2 { font-size: 34px; }
+      .hero-wrap { min-height: 380px; }
+      .hero-wrap img { width: 280px; }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <!-- 헤더 -->
-    <header>
-      <div class="container">
-        <div class="header-inner">
-          <div class="logo-wrap">
-            <div class="logo-icon"></div>
-            <div>
-              <div class="logo-main">정치 아레나</div>
-              <div class="logo-sub">POLITICS ARENA</div>
-            </div>
-          </div>
+  <aside class="floating-actions" aria-label="quick actions">
+    <button type="button">+ Follow artbyeori</button>
+    <button type="button">+ Add To Collection</button>
+  </aside>
 
-          <div class="nav-right">
-            <nav class="nav-links">
-              <a href="#match">오늘의 매치</a>
-              <a href="#why">WHY</a>
-              <a href="#join">참여안내</a>
-            </nav>
-
-            <!-- 다크모드 토글 버튼 -->
-            <button class="btn-ghost" type="button" data-theme-toggle>
-              <span aria-hidden="true">🌙</span>
-              <span class="toggle-label">다크 모드</span>
-            </button>
-
-            <button class="btn-primary">베타 대기 리스트 신청</button>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- 히어로 -->
-    <section class="hero" id="top">
-      <div class="container">
-        <div class="hero-inner">
-          <div>
-            <div class="hero-kicker">POLITICAL DEBATE LEAGUE</div>
-            <h1 class="hero-title">
-              <span class="blue">좌</span> vs <span class="red">우</span>,<br />
-              정치의 전장을 <span>아레나</span>로.
-            </h1>
-            <p class="hero-sub">
-              정치 아레나는 감정 싸움이 아닌,
-              <strong>근거·논리·매너</strong>로 승부 보는 정치 토론 리그입니다.
-              시즌제 랭킹과 배지로 토론왕·정치왕을 선발합니다.
-            </p>
-            <div class="hero-tags">
-              <span class="tag">#좌우_논리대결</span>
-              <span class="tag">#정치토론_리그</span>
-              <span class="tag">#배지_랭킹_시즌제</span>
-              <span class="tag">#정치아레나</span>
-            </div>
-            <div class="hero-cta-row" id="join">
-              <a
-                class="btn-primary"
-                href="https://open.kakao.com/o/puG7Hx4h"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                초기 유저 커뮤니티 합류하기
-              </a>
-              <div class="hero-note">
-                <span>베타 오픈 준비 중</span> · 인스타/틱톡/트위터 연동 예정
-              </div>
-            </div>
-          </div>
-
-          <!-- 배너 이미지 -->
-          <div class="hero-image-wrap">
-            <img src="arena-banner.jpg.jpg" alt="정치 아레나 VS 배너" />
-          </div>
-        </div>
+  <main class="page">
+    <section class="card" aria-label="game card">
+      <p class="score">0</p>
+      <div class="hero-wrap">
+        <img src="https://images.unsplash.com/photo-1586042091284-bd35c8c1d917?auto=format&fit=crop&w=700&q=80" alt="뒤돌아 앉아 있는 주황 고양이" />
       </div>
     </section>
 
-    <!-- 오늘의 매치 -->
-    <section class="section" id="match">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-kicker">TODAY'S MATCH</div>
-          <h2 class="section-title">오늘의 아레나 매치</h2>
-          <p class="section-sub">
-            오늘의 주제는 <strong>“계엄령 선포, 위헌인가 아닌가”</strong>이며 좌·우가 헌법·법률 근거로 토론합니다.
-          </p>
-        </div>
+    <section class="desc" aria-label="description">
+      <p>당신은 째무를 빗질하기 위해 고용되었습니다.</p>
+      <p>모바일로 플레이 시 버그가 있을 수 있음</p>
+      <p class="meta">개발자 : 벼리 (@artbyeori)</p>
+      <p class="meta">고양이 : 째무 (@jjaemu.)</p>
 
-        <div class="arena-card">
-          <div class="arena-header">
-            <span>오늘의 아레나 매치 · 헌법 이슈</span>
-            <span>시즌1 · 에피소드 #01</span>
-          </div>
-          <div class="arena-divider"></div>
-          <div class="arena-sides">
-            <div>
-              <div class="arena-side-label blue">좌 · BLUE</div>
-              <div class="arena-topic">
-                계엄령 선포는 위헌이다
-              </div>
-              <div class="arena-meta">
-                참가자: <span>@const_rights</span><br />
-                논점: 기본권 침해, 권력 남용
-              </div>
-            </div>
-            <div>
-              <div class="arena-side-label red">우 · RED</div>
-              <div class="arena-topic right">
-                계엄령 선포는 위헌이 아니다
-              </div>
-              <div class="arena-meta" style="text-align: right;">
-                참가자: <span>@order_first</span><br />
-                논점: 국가 안보, 비상권 행사
-              </div>
-            </div>
-          </div>
-          <div class="arena-footer">
-            <span class="chip">오늘의 이슈 : 계엄령 · 헌법 쟁점</span>
-            <span>실시간 투표 · 토론 스레드 연동 예정</span>
-          </div>
-        </div>
-      </div>
+      <a href="#" class="more">More information ▾</a>
+
+      <h2>Comments</h2>
+      <p><a class="login" href="#">Log in with itch.io</a> to leave a comment.</p>
     </section>
-
-    <!-- WHY 정치 아레나 -->
-    <section class="section alt" id="why">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-kicker">WHY POLITICS ARENA</div>
-          <h2 class="section-title">왜 ‘정치 아레나’인가?</h2>
-          <p class="section-sub">
-            단순 커뮤니티가 아니라, <strong>정치 토론을 게임처럼 즐길 수 있는 시스템</strong>을
-            목표로 합니다.
-          </p>
-        </div>
-
-        <div class="feature-grid">
-          <div class="card">
-            <div class="card-label">POINTS</div>
-            <div class="card-title">발언 포인트 & 매너 점수</div>
-            <p class="card-text">
-              근거 있는 주장, 출처가 명확한 자료, 매너 있는 토론에 포인트를 부여합니다.
-              단순 악플·감정표출은 자연스럽게 도태되도록 설계합니다.
-            </p>
-          </div>
-          <div class="card">
-            <div class="card-label">BADGES</div>
-            <div class="card-title">토론왕 · 팩트체커 배지</div>
-            <p class="card-text">
-              시즌마다 토론왕, 팩트체커, 매너왕 등 배지를 부여하고,
-              SNS 프로필에 공유 가능한 형태로 제공합니다.
-            </p>
-          </div>
-          <div class="card">
-            <div class="card-label">LEAGUE</div>
-            <div class="card-title">시즌제 리그 & 오프라인 연계</div>
-            <p class="card-text">
-              시즌 랭킹 상위 유저는 오프라인 토론회, 세미나, 네트워킹에 초청하여
-              새로운 정치 크리에이터로 성장할 수 있는 기회를 만듭니다.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 푸터 -->
-    <footer>
-      <div class="container">
-        <div class="footer-inner">
-          <div>© 2025 정치 아레나 Politics Arena. All rights reserved.</div>
-          <div>Contact: contact@politicsarena.example · SNS: @politicsarena (예정)</div>
-        </div>
-      </div>
-    </footer>
-  </div>
-
-  <!-- 🔧 다크모드 토글 스크립트 -->
-  <script>
-    (function () {
-      const body = document.body;
-      const toggleBtn = document.querySelector("[data-theme-toggle]");
-      const label = toggleBtn?.querySelector(".toggle-label");
-      const icon = toggleBtn?.querySelector("span[aria-hidden='true']");
-
-      // 저장된 테마 불러오기
-      const storedTheme = localStorage.getItem("politics-arena-theme");
-      if (storedTheme === "dark") {
-        body.classList.add("dark");
-        if (label) label.textContent = "라이트 모드";
-        if (icon) icon.textContent = "☀️";
-      }
-
-      toggleBtn?.addEventListener("click", () => {
-        const isDark = body.classList.toggle("dark");
-        if (isDark) {
-          localStorage.setItem("politics-arena-theme", "dark");
-          if (label) label.textContent = "라이트 모드";
-          if (icon) icon.textContent = "☀️";
-        } else {
-          localStorage.setItem("politics-arena-theme", "light");
-          if (label) label.textContent = "다크 모드";
-          if (icon) icon.textContent = "🌙";
-        }
-      });
-    })();
-  </script>
+  </main>
 </body>
 </html>
